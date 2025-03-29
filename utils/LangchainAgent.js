@@ -10,8 +10,9 @@ export async function generateInterviewQuestions(jobPosition, jobDescription, jo
   });
 
   const model = new ChatOpenAI({
-    openAIApiKey: 'your-api-key',
+    openAIApiKey: process.env.NEXT_PUBLIC_OPEN_API_KEY ,
     temperature: 0.7,
+    response_format: "json"
   });
 
   const promptTemplate = new PromptTemplate({
@@ -67,9 +68,12 @@ export async function generateInterviewQuestions(jobPosition, jobDescription, jo
       console.error("AI response is not an array. Received:", jsonResponse);
       throw new Error("AI response is not an array of questions.");
     }
+    const cleanedResponse = responseText.replace(/^```json\n|```$/g, ''); // Removes Markdown
+    const parsedResponse = JSON.parse(cleanedResponse);
+
 
     console.log("Parsed Questions:", jsonResponse);
-    return jsonResponse;
+    return parsedResponse;
   } catch (error) {
     console.error("Error Processing OpenAI Response:", error);
     throw new Error("Failed to parse OpenAI response.");
