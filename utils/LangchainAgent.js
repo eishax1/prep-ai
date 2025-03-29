@@ -1,10 +1,11 @@
 import { PromptTemplate } from "@langchain/core/prompts";
 import { ChatOpenAI } from "@langchain/openai";
 
-export async function generateInterviewQuestions(jobPosition, jobDescription, jobExperience, questions) {
+export async function generateInterviewQuestions(jobPosition, jobDescription, difficultyLevel, jobExperience, questions) {
   console.log("Generating interview questions with:", {
     jobPosition,
     jobDescription,
+    difficultyLevel,
     jobExperience,
     questions
   });
@@ -25,6 +26,7 @@ export async function generateInterviewQuestions(jobPosition, jobDescription, jo
     
     - Job Position: {jobPosition}
     - Job Description: {jobDescription}
+    - Difficulty Level: {difficultyLevel}
     - Experience Level: {jobExperience} years
 
     Provide responses in JSON format as an array of objects where each object includes:
@@ -34,16 +36,17 @@ export async function generateInterviewQuestions(jobPosition, jobDescription, jo
     For subjective questions (e.g., opinions, best practices, personal experiences), start the answer with:
     "Disclaimer: As an AI language model, my response is based on general best practices and publicly available knowledge. This may be subjective, and different experts may have varying opinions."
     Ensure the answers are clear, informative, and relevant to the specified job role and experience level.`,
-    inputVariables: ["jobPosition", "jobDescription", "jobExperience", "questions"],
+    inputVariables: ["jobPosition", "jobDescription","difficultyLevel", "jobExperience", "questions"],
   });
 
   try {
 
 
-    console.log("Inputs before formatting:", { jobPosition, jobDescription, jobExperience, questions });
+    console.log("Inputs before formatting:", { jobPosition, jobDescription, difficultyLevel, jobExperience, questions });
     const formattedPrompt = await promptTemplate.format({
       jobPosition,
       jobDescription,
+      difficultyLevel,
       jobExperience,
       questions 
     });
@@ -68,7 +71,7 @@ export async function generateInterviewQuestions(jobPosition, jobDescription, jo
       console.error("AI response is not an array. Received:", jsonResponse);
       throw new Error("AI response is not an array of questions.");
     }
-    const cleanedResponse = responseText.replace(/^```json\n|```$/g, ''); // Removes Markdown
+    const cleanedResponse = response.content.replace(/^```json\n|```$/g, '');
     const parsedResponse = JSON.parse(cleanedResponse);
 
 

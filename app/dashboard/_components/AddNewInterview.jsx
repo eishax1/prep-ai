@@ -57,10 +57,12 @@ function AddNewInterview() {
   const [jobDescription, setJobDescription] = useState("");
   const [jobExperience, setJobExperience] = useState("");
   const [questions, setQuestions] = useState(5)
+  const [difficultyLevel, setDifficultyLevel] = useState("Medium"); 
+  const DIFFICULTY_LEVELS = ["Easy", "Medium", "Hard"];
   const [loading, setLoading] = useState(false);
   const { user } = useUser();
   const router = useRouter();
-    const {theme,toggleTheme}=useTheme()
+  const {theme,toggleTheme}=useTheme()
 
   // Auto-suggest tech stack based on job role
   const autoSuggestTechStack = (role) => {
@@ -83,7 +85,7 @@ function AddNewInterview() {
     });
   
     try {
-      const mockResponse = await generateInterviewQuestions(jobPosition, jobDescription, jobExperience, questions);
+      const mockResponse = await generateInterviewQuestions(jobPosition, jobDescription,difficultyLevel, jobExperience, questions);
       
       console.log("Generated Interview Questions:", mockResponse);
   
@@ -100,6 +102,7 @@ function AddNewInterview() {
           jobExperience,
           createdBy: user?.primaryEmailAddress?.emailAddress,
           createdAt: moment().format('DD-MM-YYYY'),
+          difficultyLevel,
         }).returning({ mockId: MockInterview.mockId });
   
       console.log("DB Insert Result:", res);
@@ -169,6 +172,16 @@ function AddNewInterview() {
                 onChange={(e) => setJobDescription(e.target.value)}
                 className="mt-1 text-black dark:text-white"
               />
+            </div>
+            <div className="grid gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Difficulty Level</label>
+                <select value={difficultyLevel} onChange={(e) => setDifficultyLevel(e.target.value)} className="w-full mt-1 p-2 border border-gray-300 rounded-md text-black dark:text-white dark:bg-gray-800">
+                  {DIFFICULTY_LEVELS.map((level) => (
+                    <option key={level} value={level}>{level}</option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>

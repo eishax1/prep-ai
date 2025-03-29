@@ -10,16 +10,19 @@ import {  pgTable, serial, text, varchar } from "drizzle-orm/pg-core";
 //     createdAt:varchar('createdAt'),
 //     mockId:varchar('mockId').notNull(),
 // })
-export const MockInterview=pgTable('mock_interview',{
-    id:serial('id').primaryKey(),
-    jsonMockResp:text('jsonMockResp').notNull(),
-    jobPosition:varchar('jobPosition').notNull(),
-    jobDesc:varchar('jobDesc').notNull(),
-    jobExperience:varchar('jobExperience').notNull(),
-    createdBy:varchar('createdBy').notNull(),
-    createdAt:varchar('createdAt'),
-    mockId:varchar('mockId').notNull(),
-})
+
+export const MockInterview = pgTable('mock_interview', {
+    id: serial('id').primaryKey(),
+    jsonMockResp: text('jsonMockResp').notNull(),
+    jobPosition: varchar('jobPosition').notNull(),
+    jobDesc: varchar('jobDesc').notNull(),
+    jobExperience: varchar('jobExperience').notNull(),
+    createdBy: varchar('createdBy').notNull(),
+    createdAt: varchar('createdAt'),
+    mockId: varchar('mockId').notNull(),
+    difficultyLevel: varchar('difficultyLevel', { length: 10 }).notNull()
+});
+
 
 export const UserAnswer = pgTable('user_answer',{
     id:serial('id').primaryKey(),
